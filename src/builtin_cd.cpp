@@ -100,6 +100,8 @@ maybe_t<int> builtin_cd(parser_t &parser, io_streams_t &streams, const wchar_t *
             break;
         }
 
+        FLOGF(warning, _(L"\nPHIL4: cd to %ls"), norm_dir.c_str());
+
         parser.libdata().cwd_fd = std::make_shared<const autoclose_fd_t>(std::move(dir_fd));
         std::vector<event_t> evts;
         parser.vars().set_one(L"PWD", ENV_EXPORT | ENV_GLOBAL, std::move(norm_dir), &evts);

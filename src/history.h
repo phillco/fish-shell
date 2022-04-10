@@ -74,12 +74,19 @@ class history_item_t {
    public:
     /// Construct from a text, timestamp, and optional identifier.
     /// If \p no_persist is set, then do not write this item to disk.
+//    explicit history_item_t(
+//        wcstring str = {}, time_t when = 0, history_identifier_t ident = 0,
+//        history_persistence_mode_t persist_mode = history_persistence_mode_t::disk);
+
     explicit history_item_t(
         wcstring str = {}, time_t when = 0, history_identifier_t ident = 0,
-        history_persistence_mode_t persist_mode = history_persistence_mode_t::disk);
+        history_persistence_mode_t persist_mode = history_persistence_mode_t::disk, wcstring pwd = {});
+
 
     /// \return the text as a string.
     const wcstring &str() const { return contents; }
+    
+    const wcstring &get_pwd() const { return pwd; }
 
     /// \return whether the text is empty.
     bool empty() const { return contents.empty(); }
@@ -105,6 +112,9 @@ class history_item_t {
 
     // The actual contents of the entry.
     wcstring contents;
+
+    // The actual contents of the entry.
+    wcstring pwd;
 
     // Original creation time for the entry.
     time_t creation_timestamp;

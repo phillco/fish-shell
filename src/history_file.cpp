@@ -459,7 +459,10 @@ void append_history_item_to_buffer(const history_item_t &item, std::string *buff
 
     std::string cmd = wcs2string(item.str());
     escape_yaml_fish_2_0(&cmd);
+    std::string pwd = wcs2string(item.get_pwd());
+    escape_yaml_fish_2_0(&pwd);
     append("- cmd: ", cmd.c_str(), "\n");
+    append("  cwd: ", pwd.c_str(), "\n");
     append("  when: ", std::to_string(item.timestamp()).c_str(), "\n");
     const path_list_t &paths = item.get_required_paths();
     if (!paths.empty()) {

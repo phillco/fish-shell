@@ -166,9 +166,17 @@ bool history_item_t::merge(const history_item_t &item) {
     return true;
 }
 
+//history_item_t::history_item_t(wcstring str, time_t when, history_identifier_t ident,
+//                               history_persistence_mode_t persist_mode)
+//    : contents(std::move(str)),
+//      creation_timestamp(when),
+//      identifier(ident),
+//      persist_mode(persist_mode) {}
+
 history_item_t::history_item_t(wcstring str, time_t when, history_identifier_t ident,
-                               history_persistence_mode_t persist_mode)
+                               history_persistence_mode_t persist_mode,wcstring pwd)
     : contents(std::move(str)),
+      pwd(std::move(pwd)),
       creation_timestamp(when),
       identifier(ident),
       persist_mode(persist_mode) {}
@@ -398,6 +406,8 @@ void history_impl_t::add(history_item_t &&item, bool pending, bool do_save) {
     if (item.contents.empty()) {
         return;
     }
+
+//    FLOGF(warning, _(L"\nPHIL: ||%ls||"), operation_context_t::globals().vars.get_pwd_slash().c_str());
 
     // Try merging with the last item.
     if (!new_items.empty() && new_items.back().merge(item)) {
@@ -1397,8 +1407,12 @@ void history_t::add_pending_with_file_detection(const std::shared_ptr<history_t>
 
     // Make our history item.
     time_t when = imp->timestamp_now();
+    wcstring cwd = vars->get_pwd_slash();
     history_identifier_t identifier = imp->next_identifier();
-    history_item_t item{str, when, identifier, persist_mode};
+    history_item_t item{str, when, identifier, persist_mode, cwd};
+
+    FLOGF(warning, _(L"\nPHIL3: ||%ls||"), item.pwd.c_str());
+//    item.pwd = "testing";
 
     if (wants_file_detection) {
         imp->disable_automatic_saving();

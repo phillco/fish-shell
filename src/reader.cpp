@@ -3355,6 +3355,11 @@ void reader_data_t::handle_readline_command(readline_cmd_t c, readline_loop_stat
                         } else {
                             mode = history_persistence_mode_t::disk;
                         }
+                        
+                        FLOGF(warning, _(L"\nPHIL2: |%d| ||%ls||"), parser().get_last_status(), parser().vars().get_pwd_slash().c_str());
+
+
+
                         history_t::add_pending_with_file_detection(history, text, vars.snapshot(),
                                                                    mode);
                     }
